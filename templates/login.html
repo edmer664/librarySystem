@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section id="card-login-margin" class="bg-info d-flex flex-column align-items-center">
+    <div id="card-login-margin-top" class="card d-flex mx-5 w-50 bg-light my-5 shadow-lg">
+
+        <div class="card-header bg-primary text-center text-white">
+            <h1>
+                Login
+            </h1>
+        </div>
+        <div class="card-body ">
+            <form class="form-group justify-content-around action="{{url_for('login' ) }}" method="post">
+                <label for="username">
+                    Username:
+                </label>
+                <input type="text" class="form-control mb-2" name="username" placeholder="Username">
+                <label for="password">
+                    Password:
+                </label>
+                <input type="password" class="form-control mb-2" name="password" placeholder="Password">
+                <button class="btn btn-primary" type="submit"> Submit</button>
+            </form>
+        </div>
+        <div class="card-footer bg-primary">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <p class="pl-3 rounded alert-danger"> 
+                        {{msg}}
+                    </p>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <p class="text-decoration-none my-2 text-white">
+                <a class="text-decoration-none text-white" href="{{url_for('makeAccount')}}"> Create New Account</a>
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock content %}

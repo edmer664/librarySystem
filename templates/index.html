@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id='home-banner' class="d-flex align-items-center justify-content-between bg-warning pb-2 pt-2">
+    <h1 class="text-white text-center">EdmerKun Library</h1>
+    <span >
+    <a href="{{url_for('logout')}}" class="text-decoration-none btn btn-danger">
+        Log Out
+    </a>
+    </span>
+    
+</div>
+
+<main class="d-flex flex-column bg-info h-100 align-items-center">
+    
+        <div class="w-75 btn btn-danger btn-block text-center mx-4 my-4 ">
+            <a href="{{ url_for('borrowBooks') }}" class="text-white text-decoration-none ">
+                Borrow Books
+            </a>
+        </div>
+   
+    
+        <div class="w-75 btn btn-success btn-block text-center mx-4 my-4">  
+            <a href="{{url_for('returnBooks')}}" class="text-white text-decoration-none  ">
+                Return Books 
+            </a>
+        </div>
+    
+        <div class="w-75 btn btn-primary btn-block text-center mx-4 my-4">  
+            <a href="{{url_for('addBooks')}}" class="text-white text-decoration-none ">
+                Add Books
+            </a>
+        </div>
+
+</main>
+
+<section id="details" class="d-flex flex-column bg-info h-100 align-items-center py-5">
+    <div class="card bg-white w-50 shadow-lg">
+        <h1 class="card-header text-center ">
+            About
+        </h1>
+        <p class="card-body in">
+            This website is for educational purposes and to demonstrate the skill set needed in creating this. It is made using the flask framework coupled with extensions such as flask-login and flask-sqlalchemy. By creating something like this, you will be able to demonstrate the practical application of programming. HTML, CSS, and Python are used to implement this website. For further information on how this works, please refer to the source code.
+            
+        </p>
+        <p class="card-footer fst-italic text-muted">
+            -EdmerKun
+        </p>
+    </div>
+    
+</section>
+
+
+{% endblock content%}
