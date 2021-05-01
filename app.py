@@ -18,6 +18,12 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 #Model
+"""
+This class handles the model of databse for books 
+
+columns are id,bookName,author,isBorrowed,borrowedBy,
+dateBorrowed, dateReturned,dateRegistered
+"""
 class Books(db.Model):
     #Book Model
     id = db.Column(db.Integer,primary_key = True)
@@ -26,6 +32,7 @@ class Books(db.Model):
     isBorrowed = db.Column(db.Boolean, nullable = True)
     borrowedBy = db.Column(db.String(30), nullable = True)
     dateBorrowed = db.Column(db.DateTime, nullable = True)
+    dateReturned = db.Column(db.DateTime,nullable=True)
     dateRegistered = db.Column(db.DateTime, nullable = False, default = datetime.now())
 
 
@@ -88,7 +95,7 @@ def makeAccount():
             return redirect(url_for('login'))
         except:
             flash("Username Taken!", "'error'")
-            return redirect(url_for('createAccount'))
+            return redirect(url_for('makeAccount'))
 
 @app.route('/')
 def indexPage():
@@ -98,15 +105,55 @@ def indexPage():
     else:
         return render_template("index.html",title='Home')
 
-@app.route('/borrow')
+@app.route('/borrow',methods=['POST','GET'])
+@login_required
 def borrowBooks():
-    return render_template('borrow.html')
+    if request.method == "GET":
+        contents = Books.query.filter_by(isBorrowed=False).order_by(Books.bookName).all()
+        return render_template('borrow.html',contents=contents)
+    else:
+        reqbook = request.form.get('borrow_btn')
+        book = Books.query.filter_by(bookName=reqbook).first()
+        if book.isBorrowed == False:
+            book.isBorrowed = True
+            book.borrowedBy = current_user.username
+            book.dateBorrowed = datetime.now()
+            db.session.commit()
+            return redirect(url_for('borrowBooks'))
+        else:
+            flash('currently borrowed, please choose another!','error')
+            return redirect(url_for('borrowBooks'))
 
-
-@app.route('/return')
+@app.route('/return',methods=['POST','GET'])
+@login_required
 def returnBooks():
-    pass
+    
+    if request.method == "POST":
+        reqBook=request.form.get('return_btn')
+        book = Books.query.filter_by(bookName=reqBook).first()
+        if book.isBorrowed == True and current_user.username == book.borrowedBy:
+            book.isBorrowed = True
+            book.dateReturned = datetime.now()
+            db.session.commit()
+            return redirect(url_for('returnBooks'))
+        else:
+            flash("User and Recorded borrower doesn't match",'error')
+            return redirect(url_for('returnBooks'))
+    else:
+        return render_template('return.html')
 
-@app.route('/add')
+
+
+
+@app.route('/add',methods=['POST','GET'])
+@login_required
 def addBooks():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('add.html')
+
+@app.route('/delete',methods=['POST'])
+@login_required
+def deleteBooks():
     pass
