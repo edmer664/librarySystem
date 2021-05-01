@@ -1,6 +1,82 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    
+    <main class="d-flex flex-column bg-primary">
+
+        <div class="card shadow-lg border-danger d-flex w-75 mx-auto my-4">
+            <div class="d-flex align-items-center bg-danger card-header text-center">
+                <div class="btn btn-success ms-0">
+                    <a class="text-white text-decoration-none" href="{{url_for('indexPage')}}">Back</a>
+                </div>
+                <h1 class=" ms-5 text-white">Borrow Books</h1>
+            </div>
+            <div class="bg-white card-body text-center ">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <p class="pl-1 rounded alert-danger"> 
+                                {{msg}}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <table class="table table-danger table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Actions
+                            </th>
+                            <th scope="col">
+                                Name
+                            </th>
+                            <th scope="col">
+                                Author 
+                            </th>
+                            <th scope="col">
+                               Returned By
+                            </th>
+                            <th scope="col">
+                                Date Returned
+                            </th>
+                            <th scope="col">
+                                Date Registered
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for content in contents %}
+
+                            <tr>
+                                <td>
+                                    <form method="post" action="{{url_for('borrowBooks')}}">
+                                        <button type="submit" value="{{content.bookName}}" name="borrow_btn" class="btn btn-danger">Borrow</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    {{content.bookName}}
+                                </td>
+                                <td>
+                                    {{content.author}}
+                                </td>
+                                <td>
+                                    {{content.borrowedBy}}
+                                </td>
+                                <td>
+                                    {{content.dateReturned}}
+                                </td>
+                                <td>
+                                    {{content.dateRegistered}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </main>
 
 {% endblock content %}
