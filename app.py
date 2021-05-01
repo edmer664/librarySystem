@@ -29,7 +29,7 @@ class Books(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     bookName = db.Column(db.String(100), nullable = False)
     author = db.Column(db.String(50), nullable = False)
-    isBorrowed = db.Column(db.Boolean, nullable = True)
+    isBorrowed = db.Column(db.Boolean, nullable = False, default=False)
     borrowedBy = db.Column(db.String(30), nullable = True)
     dateBorrowed = db.Column(db.DateTime, nullable = True)
     dateReturned = db.Column(db.DateTime,nullable=True)
@@ -132,7 +132,7 @@ def returnBooks():
         reqBook=request.form.get('return_btn')
         book = Books.query.filter_by(bookName=reqBook).first()
         if book.isBorrowed == True and current_user.username == book.borrowedBy:
-            book.isBorrowed = True
+            book.isBorrowed = False
             book.dateReturned = datetime.now()
             db.session.commit()
             return redirect(url_for('returnBooks'))
@@ -140,7 +140,8 @@ def returnBooks():
             flash("User and Recorded borrower doesn't match",'error')
             return redirect(url_for('returnBooks'))
     else:
-        return render_template('return.html')
+        contents = Books.query.filter_by(isBorrowed=True).order_by(Books.bookName).all()
+        return render_template('return.html',contents=contents)
 
 
 
@@ -149,9 +150,19 @@ def returnBooks():
 @login_required
 def addBooks():
     if request.method == 'POST':
-        pass
+        try:
+            bookName= request.form.get('bookName')
+            author = request.form.get('author')
+            newBook = Books(bookName=bookName,author=author)
+            db.session.add(newBook)
+            db.session.commit()
+            return redirect(url_for('addBooks'))
+        except:
+            flash('Book already exists','error')
+            return redirect(url_for('addBooks'))
     else:
-        return render_template('add.html')
+        contents = Books.query.order_by(Books.bookName).all()
+        return render_template('add.html',contents=contents)
 
 @app.route('/delete',methods=['POST'])
 @login_required
