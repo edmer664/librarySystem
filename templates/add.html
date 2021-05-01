@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <main class="d-flex flex-column bg-primary">
+
+        <div class="card shadow-lg border-success d-flex w-75 mx-auto my-4">
+            <div class="d-flex align-items-center bg-info card-header text-center">
+                <div class="btn btn-primary ms-0">
+                    <a class="text-white text-decoration-none" href="{{url_for('indexPage')}}">Back</a>
+                </div>
+                <h1 class=" ms-5 text-white">Add Books</h1>
+            </div>
+            <div class="bg-white card-body text-center ">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <p class="pl-1 rounded alert-danger"> 
+                                {{msg}}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <div>
+                    <form method="post" class="form-group d-flex align-items-sm-start flex-column my-3" action="{{url_for('addBooks')}}">
+                        <label class="text-muted">
+                            Book Title
+                        </label>
+                        <input class="form-control my-2" type="text" name="bookName" placeholder="e.g., Automate the Boring Stuff With Python">
+                        <label class="text-muted">
+                            Author
+                        </label>
+                        <input class="form-control my-2" type="text" name="author" placeholder="e.g., Al Sweigart">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+                <table class="table table-info table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                Actions
+                            </th>
+                            <th scope="col">
+                                Name
+                            </th>
+                            <th scope="col">
+                                Author 
+                            </th>
+                            <th scope="col">
+                                Last Borrowed
+                            </th>
+                            <th scope="col">
+                                Last Borrowed by
+                            </th>
+                            <th scope="col">
+                                Date Registered
+                            </th>
+                            <th scope="col">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for content in contents %}
+
+                            <tr>
+                                <td>
+                                    <form method="post" action="{{url_for('deleteBooks')}}">
+                                        <button type="submit" value="{{content.bookName}}" name="delete_btn" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    {{content.bookName}}
+                                </td>
+                                <td>
+                                    {{content.author}}
+                                </td>
+                                <td>
+                                    {{content.dateBorrowed}}
+                                </td>
+                                <td>
+                                    {{content.borrowedBy}}
+                                </td>
+                                <td>
+                                    {{content.dateRegistered}}
+                                </td>
+                                <td>
+                                    {%if content.isBorrowed %}
+                                    Not Available
+                                    {% endif %}
+                                    {%if not content.isBorrowed%}
+                                    Available
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </main>
+
+{% endblock content %}
