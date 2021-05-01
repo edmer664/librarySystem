@@ -2,7 +2,7 @@
 {% block content %}
 
 <section id="card-login-margin" class="bg-info d-flex flex-column align-items-center">
-    <div id="card-login-margin-top" class="card d-flex mx-5 w-50 bg-light my-5 shadow-lg">
+    <div id="card-login-margin-top" class="card border-success d-flex mx-5 w-50 bg-light my-5 shadow-lg">
 
         <div class="card-header bg-success text-center text-white">
             <h1>
@@ -10,7 +10,7 @@
             </h1>
         </div>
         <div class="card-body ">
-            <form class="form-group justify-content-around action="{{url_for('login' ) }}" method="post">
+            <form class="form-group justify-content-around action="{{url_for('makeAccount' ) }}" method="post">
                 <label for="username">
                     Username:
                 </label>
