@@ -167,4 +167,9 @@ def addBooks():
 @app.route('/delete',methods=['POST'])
 @login_required
 def deleteBooks():
-    pass
+    if request.method == 'POST':
+        reqBook = request.form.get('book_name') 
+        book = Books.query.filter_by(bookName=reqBook).first()
+        db.session.delete(book)
+        db.session.commit()
+        return redirect(url_for('addBooks'))
